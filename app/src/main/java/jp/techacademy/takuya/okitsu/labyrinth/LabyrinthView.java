@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,16 +22,29 @@ public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback
     private final Paint paint = new Paint();
 
     private final Bitmap ballBitmap;
+    private final Bitmap bmpRsz;
     private float ballX;
     private float ballY;
+
 
     private Map map;
 
     public LabyrinthView(Context context) {
         super(context);
 
+        Matrix matrix = new Matrix();
 
+        //縮小比率
+        float rsz_ratio_w = 0.4f; //横縮小率
+        float rsz_ratio_h = 0.4f; //縦縮小率
+
+        //比率をMatrixに設定
+        matrix.postScale(rsz_ratio_w,rsz_ratio_h);
+
+        //元画像
         ballBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.droid);
+        //リサイズ画像
+        bmpRsz = Bitmap.createBitmap(ballBitmap,0,0,ballBitmap.getWidth(),ballBitmap.getHeight(),matrix,true);
 
         getHolder().addCallback(this);
     }
@@ -102,6 +116,6 @@ public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback
             map = new Map(canvas.getWidth(),canvas.getHeight(),blockSize);
         }
         map.draw(canvas);
-        canvas.drawBitmap(ballBitmap,50,50,paint);
+        canvas.drawBitmap(bmpRsz,50,50,paint);
     }
 }
