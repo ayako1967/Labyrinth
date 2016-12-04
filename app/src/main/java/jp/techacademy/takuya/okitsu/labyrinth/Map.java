@@ -3,7 +3,6 @@ package jp.techacademy.takuya.okitsu.labyrinth;
 /**
  * Created by takuy on 2016/12/04.
  */
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -27,21 +26,23 @@ public class Map {
     }
 
     private Block[][] createMap(int seed) {
-       if (horizontalBlockCount % 2 == 0) {
+       Random rand = new Random(seed);
+/*        if (horizontalBlockCount % 2 == 0) {
            horizontalBlockCount--;
        }
         if (verticalBlockCount % 2 == 0) {
             verticalBlockCount--;
         }
-
+*/
         Block[][] array = new Block[verticalBlockCount][horizontalBlockCount];
-
+/*
         int[][] map =
                 LabyrinthGenerator.getMap(horizontalBlockCount,verticalBlockCount,seed);
-
+*/
         for (int y = 0;y < verticalBlockCount;y++) {
             for (int x = 0;x < horizontalBlockCount;x++) {
-                int type = map[y][x];
+                int type = rand.nextInt(2);
+                //int type = map[y][x];
                 int left = x * blockSize + 1;
                 int top = y * blockSize + 1;
                 int right = left + blockSize - 2;
@@ -54,7 +55,7 @@ public class Map {
     void draw(Canvas canvas) {
 
         int yLength = blockArray.length;
-        for (int y = 0;y < yLength;y++) {
+        for (int y = 0; y < yLength;y++) {
             int xLength = blockArray[y].length;
             for (int x = 0;x < xLength;x++) {
                 blockArray[y][x].draw(canvas);

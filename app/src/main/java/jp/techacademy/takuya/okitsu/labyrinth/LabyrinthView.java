@@ -111,7 +111,7 @@ public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback
     public void drawLabyrinth(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
 
-        int blockSize = ballBitmap.getHeight();
+        int blockSize = ballBitmap.getHeight() / 2;
         if (map == null) {
             map = new Map(canvas.getWidth(),canvas.getHeight(),blockSize);
         }
