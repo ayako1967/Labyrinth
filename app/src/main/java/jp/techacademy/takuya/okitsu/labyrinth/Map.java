@@ -17,6 +17,12 @@ public class Map {
 
     private final Block[][] blockArray;
 
+    private Block startBlock;
+
+    public Block getStartBlock() {
+        return startBlock;
+    }
+
     public Map(int width,int height,int blockSize) {
         this.blockSize = blockSize;
         this.horizontalBlockCount = width / blockSize;
@@ -27,22 +33,28 @@ public class Map {
 
     private Block[][] createMap(int seed) {
        Random rand = new Random(seed);
-/*        if (horizontalBlockCount % 2 == 0) {
+       if (horizontalBlockCount % 2 == 0) {
            horizontalBlockCount--;
        }
         if (verticalBlockCount % 2 == 0) {
             verticalBlockCount--;
         }
-*/
+
+
         Block[][] array = new Block[verticalBlockCount][horizontalBlockCount];
+
+        LabyrinthGenerator.MapResult mapResult =
+                LabyrinthGenerator.getMap(horizontalBlockCount,verticalBlockCount,seed);
 /*
         int[][] map =
                 LabyrinthGenerator.getMap(horizontalBlockCount,verticalBlockCount,seed);
 */
+        int [][] map = mapResult.map;
+
         for (int y = 0;y < verticalBlockCount;y++) {
             for (int x = 0;x < horizontalBlockCount;x++) {
-                int type = rand.nextInt(2);
-                //int type = map[y][x];
+               // int type = rand.nextInt(2);
+                int type = map[y][x];
                 int left = x * blockSize + 1;
                 int top = y * blockSize + 1;
                 int right = left + blockSize - 2;
@@ -50,6 +62,9 @@ public class Map {
                 array[y][x] = new Block(type,left,top,right,bottom);
             }
         }
+
+        startBlock = array[mapResult.startY][mapResult.startX];
+
         return array;
     }
     void draw(Canvas canvas) {
@@ -66,9 +81,13 @@ public class Map {
     static class Block {
         private static final int TYPE_FLOOR = 0;
         private static final int TYPE_WALL = 1;
+        private static final int TYPE_START = 2;
+        private static final int TYPE_GOAL = 3;
 
         private static final int COLOR_FLOOR = Color.GRAY;
         private static final int COLOR_WALL = Color.BLACK;
+        private static final int COLOR_START = Color.YELLOW;
+        private static final int COLOR_GOAL = Color.GREEN;
 
         private final int type;
         private final Paint paint;
@@ -85,6 +104,12 @@ public class Map {
                     break;
                 case TYPE_WALL:
                     paint.setColor(COLOR_WALL);
+                    break;
+                case TYPE_START:
+                    paint.setColor(COLOR_START);
+                    break;
+                case TYPE_GOAL:
+                    paint.setColor(COLOR_GOAL);
                     break;
             }
 
