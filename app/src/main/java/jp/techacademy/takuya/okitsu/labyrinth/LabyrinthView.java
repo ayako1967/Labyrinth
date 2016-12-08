@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback{
 
+    private static final float BALL_SCALE = 0.8f;
     private static final  int DRAW_INTERVAL = 1000/60;
 
     private final Paint paint = new Paint();
@@ -25,9 +26,22 @@ public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback
     private final Bitmap bmpRsz;
     private float ballX;
     private float ballY;
+    private Ball ball;
 
 
     private Map map;
+
+    interface EventCallback {
+        void onGoal();
+        void onHole();
+
+    }
+
+    private EventCallback eventCallback;
+
+    public void setCallback(EventCallback eventCallback) {
+        this.eventCallback = eventCallback;
+    }
 
     public LabyrinthView(Context context) {
         super(context);
@@ -113,8 +127,9 @@ public class LabyrinthView extends SurfaceView implements SurfaceHolder.Callback
 
         int blockSize = ballBitmap.getHeight() / 4;
         if (map == null) {
-            map = new Map(canvas.getWidth(),canvas.getHeight(),blockSize);
+            map = new Map(canvas.getWidth(),canvas.getHeight(),blockSize,eventCallback);
         }
+
         map.draw(canvas);
         canvas.drawBitmap(bmpRsz,50,50,paint);
     }

@@ -23,11 +23,14 @@ public class Map {
         return startBlock;
     }
 
-    public Map(int width,int height,int blockSize) {
+
+    private final LabyrinthView.EventCallback eventCallback;
+
+    public Map(int width,int height,int blockSize,LabyrinthView.EventCallback eventCallback) {
         this.blockSize = blockSize;
         this.horizontalBlockCount = width / blockSize;
         this.verticalBlockCount = height / blockSize;
-
+        this.eventCallback = eventCallback;
         blockArray = createMap(0);
     }
 
@@ -83,11 +86,13 @@ public class Map {
         private static final int TYPE_WALL = 1;
         private static final int TYPE_START = 2;
         private static final int TYPE_GOAL = 3;
+        private static final int TYPE_HOLE = 4;
 
         private static final int COLOR_FLOOR = Color.GRAY;
         private static final int COLOR_WALL = Color.BLACK;
         private static final int COLOR_START = Color.YELLOW;
         private static final int COLOR_GOAL = Color.GREEN;
+        private static final int COLOR_HOLE = Color.CYAN;
 
         private final int type;
         private final Paint paint;
@@ -110,6 +115,9 @@ public class Map {
                     break;
                 case TYPE_GOAL:
                     paint.setColor(COLOR_GOAL);
+                    break;
+                case TYPE_HOLE:
+                    paint.setColor(COLOR_HOLE);
                     break;
             }
 

@@ -15,6 +15,7 @@ public class LabyrinthGenerator {
     public static final int WALL = 1;
     public static final int START = 2;
     public static final int GOAL = 3;
+    public static final int HOLE = 4;
     public static final int INNER_WALL = -1;
 
     public static class MapResult {
@@ -104,7 +105,7 @@ public class LabyrinthGenerator {
         if (y < 0 || x < 0 || y >= map.length || x >= map[0].length) {
             return result;
         }
-        if (map[y][x] == WALL) {
+        if (map[y][x] == WALL || map[y][x] == HOLE) {
             result[y][x] = -1;
             return result;
         }
@@ -153,9 +154,31 @@ public class LabyrinthGenerator {
                     }
                 }
             }
+            int holeCount = seed + 1;
+        if (holeCount > (verticalBlockCount + horizontalBlockCount)) {
+            holeCount = verticalBlockCount + horizontalBlockCount;
+
+        }
+
+        setHoles(holeCount,rand,verticalBlockCount,horizontalBlockCount,map);
 
             return map;
         }
+
+    private static void setHoles(int holeCount,Random rand,
+                                 int verticalBlockCount,int horizontalBlockCount,int [][] map) {
+        do {
+            int y = rand.nextInt(verticalBlockCount - 2) + 1;
+            int x = rand.nextInt(horizontalBlockCount - 2) + 1;
+
+            if (map[y][x] == WALL) {
+                map[y][x] = HOLE;
+                holeCount--;
+            }
+
+        } while (holeCount > 0);
+    }
+
         private static boolean setDirection(int y,int x,Direction direction,int [][] map) {
         map[y][x] = WALL;
 
